@@ -9,3 +9,6 @@ python-dotenv
 tqdm
 typer
 -e .
+ipykerne==6.30.0
+notebook==7.4.4
+pandas==2.3.1
