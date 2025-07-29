@@ -12,3 +12,6 @@ typer
 ipykerne==6.30.0
 notebook==7.4.4
 pandas==2.3.1
+matplotlib==3.10.3
+# missingno==0.5.2
+scikit_learn==1.7.1
