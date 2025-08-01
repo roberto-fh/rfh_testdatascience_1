@@ -33,12 +33,84 @@ column_names = [
 
 na_value = '?'
 
-# If tqdm is installed, configure loguru with tqdm.write
-# https://github.com/Delgan/loguru/issues/135
-try:
-    from tqdm import tqdm
+dict_map_train = {
+    '<=50K': 0,
+    '>50K': 1
+}
 
-    logger.remove(0)
-    logger.add(lambda msg: tqdm.write(msg, end=""), colorize=True)
-except ModuleNotFoundError:
-    pass
+dict_map_test = {
+    '<=50K.': 0,
+    '>50K.': 1
+}
+
+target_column = 'income'
+
+continent_map = {
+    # América
+    'Canada': 'America',
+    'Cuba': 'America',
+    'Jamaica': 'America',
+    'Mexico': 'America',
+    'Puerto-Rico': 'America',
+    'Honduras': 'America',
+    'Columbia': 'America',
+    'Haiti': 'America',
+    'Dominican-Republic': 'America',
+    'El-Salvador': 'America',
+    'Guatemala': 'America',
+    'Trinadad&Tobago': 'America',
+    'Nicaragua': 'America',
+    'Outlying-US(Guam-USVI-etc)': 'America',
+    'Ecuador': 'America',
+    'Peru': 'America',
+    'South': 'America',
+
+    # Europa
+    'England': 'Europe',
+    'Germany': 'Europe',
+    'Italy': 'Europe',
+    'Poland': 'Europe',
+    'Portugal': 'Europe',
+    'France': 'Europe',
+    'Yugoslavia': 'Europe',
+    'Scotland': 'Europe',
+    'Greece': 'Europe',
+    'Ireland': 'Europe',
+    'Hungary': 'Europe',
+    'Holand-Netherlands': 'Europe',
+
+    # Asia
+    'India': 'Asia',
+    'Iran': 'Asia',
+    'Philippines': 'Asia',
+    'Cambodia': 'Asia',
+    'Thailand': 'Asia',
+    'Laos': 'Asia',
+    'Taiwan': 'Asia',
+    'China': 'Asia',
+    'Japan': 'Asia',
+    'Vietnam': 'Asia',
+    'Hong': 'Asia',  # Hong Kong
+}
+
+keep_columns = [
+    'age',
+    'workclass',
+    'fnlwgt',
+    'marital-status',
+    'occupation',
+    'relationship',
+    'race',
+    'sex',
+    'capital-gain',
+    'capital-loss',
+    'continent',
+    'education_group',
+    'work_category'
+]
+
+param_grid = {
+    'model__n_estimators': [100, 200, 300],
+    'model__max_depth': [3, 5, 7],
+    'model__learning_rate': [0.05, 0.1]
+}

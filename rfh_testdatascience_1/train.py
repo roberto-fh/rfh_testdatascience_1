@@ -1,75 +1,75 @@
-from pathlib import Path
-
 from loguru import logger
-from tqdm import tqdm
-
-from rfh_testdatascience_1.config import train_path, column_names, na_value
-
-import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, accuracy_score, f1_score
-from pipeline import create_xgb_pipeline
-from rfh_testdatascience_1.dataset import PreprocessingData
+from sklearn.model_selection import GridSearchCV
+
+from rfh_testdatascience_1.pipeline import PipelineModel
+from rfh_testdatascience_1.config import param_grid
 
 
+class TrainerModel:
 
-def train_and_evaluate(df, target_col: str,
-                       use_preprocessing=True, use_balancing=False):
-    """
-    Entrena y evalúa un pipeline de XGBoost.
-    """
-    # 🔹 Cargar dataset
-    X = df.drop(target_col, axis=1)
-    y = df[target_col]
+    def __init__(self,
+                 df,
+                 target_column,
+                 processing_ind,
+                 over_sampling_ind,
+                 keep_column,
+                 grid_search_ind,
+                 learning_rate,
+                 max_depth,
+                 n_estimators):
+        self.df = df
+        self.target_column = target_column
+        self.processing_ind = processing_ind
+        self.over_sampling_ind = over_sampling_ind
+        self.keep_column = keep_column
+        self.grid_search_ind = grid_search_ind
+        self.learning_rate = learning_rate
+        self.max_depth = max_depth
+        self.n_estimators = n_estimators
 
-    # 🔹 Dividir datos
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y
-    )
+    def split_target(self):
+        X = self.df.drop(self.target_column, axis=1)
+        y = self.df[self.target_column]
+        return X, y
 
-    # 🔹 Identificar columnas
-    numeric_features = X.select_dtypes(include=["int64", "float64"]).columns.tolist()
-    categorical_features = X.select_dtypes(include=["object", "category"]).columns.tolist()
+    def categorical_columns(self):
+        return self.df.select_dtypes(include=["object", "category"]).columns.tolist()
 
-    # 🔹 Crear pipeline
-    pipeline = create_xgb_pipeline(
-        numeric_features, categorical_features,
-        use_preprocessing=use_preprocessing,
-        use_balancing=use_balancing
-    )
+    def execute(self):
+        X, y = self.split_target()
+        categorical_features = self.categorical_columns()
 
-    # 🔹 Entrenar (fit)
-    pipeline.fit(X_train, y_train)
+        transformer = PipelineModel(
+            categorical_features,
+            keep_columns=self.keep_column,
+            processing_ind=self.processing_ind,
+            over_sampling_ind=self.over_sampling_ind,
+            learning_rate=self.learning_rate,
+            max_depth=self.max_depth,
+            n_estimators=self.n_estimators,
+        )
 
-    # 🔹 Predecir
-    y_pred = pipeline.predict(X_test)
+        pipeline = transformer.execute()
 
-    # 🔹 Evaluar
-    acc = accuracy_score(y_test, y_pred)
-    f1 = f1_score(y_test, y_pred)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, random_state=42, stratify=y
+        )
 
-    print("\n=== Resultados del modelo ===")
-    print(f"Accuracy: {acc:.4f}")
-    print(f"F1-score: {f1:.4f}")
-    print(classification_report(y_test, y_pred))
+        if self.grid_search_ind:
+            grid_search = GridSearchCV(
+                estimator=pipeline,
+                param_grid=param_grid,
+                scoring='f1',
+                cv=5,
+                n_jobs=-1,
+                verbose=2
+            )
 
-    return pipeline, acc, f1
-
-
-# Ejemplo de uso:
-if __name__ == "__main__":
-
-    preprocess = PreprocessingData(
-        csv_path=train_path,
-        column_names=column_names,
-        na_value=na_value
-    )
-
-    df = preprocess.execute()
-
-    train_and_evaluate(
-        df=df,
-        target_col="income",
-        use_preprocessing=True,
-        use_balancing=True
-    )
+            grid_search.fit(X_train, y_train)
+            print("Best params:", grid_search.best_params_)
+            print("Best score:", grid_search.best_score_)
+            return X_train, X_test, y_train, y_test, grid_search
+        else:
+            pipeline.fit(X_train, y_train)
+            return X_train, X_test, y_train, y_test, pipeline
