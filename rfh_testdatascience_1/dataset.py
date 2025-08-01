@@ -1,29 +1,53 @@
-from pathlib import Path
-
 from loguru import logger
-from tqdm import tqdm
 import typer
-
-from rfh_testdatascience_1.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
 
 app = typer.Typer()
 
+import pandas as pd
 
-@app.command()
-def main(
-    # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
-    input_path: Path = RAW_DATA_DIR / "dataset.csv",
-    output_path: Path = PROCESSED_DATA_DIR / "dataset.csv",
-    # ----------------------------------------------
-):
-    # ---- REPLACE THIS WITH YOUR OWN CODE ----
-    logger.info("Processing dataset...")
-    for i in tqdm(range(10), total=10):
-        if i == 5:
-            logger.info("Something happened for iteration 5.")
-    logger.success("Processing dataset complete.")
-    # -----------------------------------------
+class PreprocessingData:
 
+    def __init__(self, csv_path, column_names, na_value):
+        self.csv_path = csv_path
+        self.column_names = column_names
+        self.na_value = na_value
 
-if __name__ == "__main__":
-    app()
+    @staticmethod
+    def load_dataset(csv_path: str, column_names=None, na_value: str = " ?"):
+        """
+        Load a CSV dataset into a pandas DataFrame.
+
+        Parameters
+        ----------
+        csv_path : str
+            Path to the CSV file.
+        column_names : list, optional
+            List of column names. If None, the CSV header is used.
+        na_value : str, optional
+            Value to be interpreted as NaN (default: " ?").
+
+        Returns
+        -------
+        pd.DataFrame
+            Loaded DataFrame.
+        """
+        logger.info('Leyendo data')
+        df = pd.read_csv(
+            csv_path,
+            header=None if column_names else "infer",  # If column names provided, no header in CSV
+            names=column_names,
+            na_values=na_value,
+            skipinitialspace=True  # Strips leading spaces in values
+        )
+        logger.info('Data raw leido')
+
+        return df
+
+    def execute(self):
+        data_raw = self.load_dataset(
+            self.csv_path,
+            self.column_names,
+            self.na_value
+        )
+
+        return data_raw
