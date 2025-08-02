@@ -9,16 +9,10 @@ Prueba de nivel posición Capgemini. Modelo de clasificación.
 ## Project Organization
 
 ```
-├── LICENSE            <- Open-source license if one is chosen
-├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
 ├── README.md          <- The top-level README for developers using this project.
 ├── data
-│   ├── external       <- Data from third party sources.
-│   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical data sets for modeling.
+│   ├── prod           <- The final, canonical data sets for modeling.
 │   └── raw            <- The original, immutable data dump.
-│
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
 │
 ├── models             <- Trained and serialized models, model predictions, or model summaries
 │
@@ -28,11 +22,6 @@ Prueba de nivel posición Capgemini. Modelo de clasificación.
 │
 ├── pyproject.toml     <- Project configuration file with package metadata for 
 │                         rfh_testdatascience_1 and configuration for tools like black
-│
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
-├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
 │
 ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
 │                         generated with `pip freeze > requirements.txt`
@@ -47,15 +36,83 @@ Prueba de nivel posición Capgemini. Modelo de clasificación.
     │
     ├── dataset.py              <- Scripts to download or generate data
     │
-    ├── features.py             <- Code to create features for modeling
+    ├── main.py                 <- Code to create features for modeling
     │
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
-    │   └── train.py            <- Code to train models
+    ├── main_prod.py            <- Code to create features for modeling
     │
-    └── plots.py                <- Code to create visualizations
+    ├── pipeline.py             <- Code to create features for modeling
+    │
+    └── train.py                <- Code to create visualizations
 ```
 
 --------
 
+## Python Version
+- Python 3.12.10
+
+---
+
+## Environment Setup
+Install all dependencies using:
+
+```bash
+pip install -r requirements.txt
+```
+### Train a Model (`main.py`)
+
+The training script `main.py` accepts **7 arguments**:
+
+1. **`model_name_arg` (str)**  
+   Model name to be used or saved.
+
+2. **`processing_ind` (bool)**  
+   Whether to process the input dataset:  
+   - Handle null values  
+   - Perform feature engineering  
+   - Perform feature selection
+
+3. **`oversampling_ind` (bool)**  
+   Whether to apply oversampling to handle class imbalance.
+
+4. **`grid_search_ind_arg` (bool)**  
+   Whether to perform hyperparameter tuning via GridSearch.
+
+5. **`test_arg` (bool)**  
+   Whether to evaluate the metrics of a specific model.
+
+6. **`learning_rate` (float [0-1])**  
+   Learning rate for the model.
+
+7. **`max_depth` (int)**  
+   Maximum depth of the model.
+
+8. **`n_estimators` (int)**  
+   Number of estimators (trees) for the model.
+
+
+### Model Saving
+
+If **`grid_search_ind_arg = False`** and **`test_arg = False`**,  
+the trained model is **saved** in the `models/` folder using the provided **`model_name_arg`**.
+
+### Production (`main_prod.py`)
+
+The production script `main_prod.py` accepts **1 argument**:
+
+1. **Model name** to use for predictions.
+
+#### Requirements for production
+- Place the data to analyze in `data/prod/`.
+- The script will return **Accuracy** and **F1-score** for the given model.
+
+### 🖥️ Example Commands
+
+#### Train a model with preprocessing and save it
+```bash
+python main.py --model_name_arg xgb_model --processing_ind True --oversampling_ind True --grid_search_ind_arg False --test_arg False --learning_rate 0.1 --max_depth 6 --n_estimators 200
+```
+
+#### Evaluate an existing model in production
+```bash
+python main_prod.py --model_name_arg xgb_model
+```
