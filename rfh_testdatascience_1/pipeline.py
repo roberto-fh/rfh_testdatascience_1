@@ -6,7 +6,6 @@ from imblearn.pipeline import Pipeline as ImbPipeline
 import pandas as pd
 from loguru import logger
 from sklearn.preprocessing import FunctionTransformer
-from functools import partial
 
 from rfh_testdatascience_1.config import continent_map
 
