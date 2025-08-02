@@ -4,7 +4,7 @@
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
 
-Prueba de nivel posición Capgemini. Modelo de clasificación.
+Modelo de clasificación.
 
 ## Project Organization
 
@@ -16,9 +16,9 @@ Prueba de nivel posición Capgemini. Modelo de clasificación.
 │
 ├── models             <- Trained and serialized models, model predictions, or model summaries
 │
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
+├── notebooks          
+│   ├── EDA            <- Notebook for EDA
+│   └── model_comp.    <- Notebook for model comparison
 │
 ├── pyproject.toml     <- Project configuration file with package metadata for 
 │                         rfh_testdatascience_1 and configuration for tools like black
@@ -34,15 +34,15 @@ Prueba de nivel posición Capgemini. Modelo de clasificación.
     │
     ├── config.py               <- Store useful variables and configuration
     │
-    ├── dataset.py              <- Scripts to download or generate data
+    ├── dataset.py              <- Data loading and target preprocessing
     │
-    ├── main.py                 <- Code to create features for modeling
+    ├── main.py                 <- Model training, evaluation, and saving
     │
-    ├── main_prod.py            <- Code to create features for modeling
+    ├── main_prod.py            <- Model evaluation with new data
     │
-    ├── pipeline.py             <- Code to create features for modeling
+    ├── pipeline.py             <- Classes for creating the XGBoost model pipeline
     │
-    └── train.py                <- Code to create visualizations
+    └── train.py                <- Classes related to model training
 ```
 
 --------
