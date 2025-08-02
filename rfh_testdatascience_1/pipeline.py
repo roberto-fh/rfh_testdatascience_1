@@ -120,12 +120,17 @@ class PipelineModel:
     def execute(self):
         if self.processing_ind:
             self.steps.append(self.fill_cat_variable())
+            logger.info('Relleno de nulos')
             self.steps.append(self.add_features())
+            logger.info('Nuevas columnas creadas')
             self.steps.append(self.select_columns_important())
+            logger.info('Selección de columnas importantes')
             self.categorical_features = ['workclass', 'education_group', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'continent', 'work_category']
         self.steps.append(self.one_hot_encoding())
+        logger.info('Aplicando OHE a las variables categoricas')
         if self.over_sampling_ind:
             self.steps.append(self.over_sampling())
+            logger.info('Aplicando oversampling')
 
         # XGBoost Model
         model = XGBClassifier(
@@ -135,6 +140,10 @@ class PipelineModel:
             random_state=42,
             eval_metric='logloss'
         )
+        logger.info('Set up del modelo')
+        logger.info(f'n_estimators :{self.n_estimators}')
+        logger.info(f'learning_rate :{self.learning_rate}')
+        logger.info(f'max_depth :{self.max_depth}')
 
         self.steps.append(('model', model))
 

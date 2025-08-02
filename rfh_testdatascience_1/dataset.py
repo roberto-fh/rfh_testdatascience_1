@@ -30,7 +30,6 @@ class PreprocessingData:
         pd.DataFrame
             Loaded DataFrame.
         """
-        logger.info('Leyendo data')
         df = pd.read_csv(
             csv_path,
             header=None if column_names else "infer",  # If column names provided, no header in CSV
@@ -38,7 +37,6 @@ class PreprocessingData:
             na_values=na_value,
             skipinitialspace=True  # Strips leading spaces in values
         )
-        logger.info('Data raw leido')
 
         return df
 

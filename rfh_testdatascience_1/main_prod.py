@@ -10,9 +10,11 @@ from rfh_testdatascience_1.dataset import PreprocessingData
 def main(
         model_name_arg,
 ):
+    logger.info(f'Carga del modelo : {model_name_arg}')
     with open(f"../models/{model_name_arg}.pkl", "rb") as f:
         pipeline = joblib.load(f)
 
+    logger.info(f'Carga de datos : {prod_path}')
     reader_data = PreprocessingData(
         csv_path=prod_path,
         column_names=column_names,
@@ -26,15 +28,15 @@ def main(
 
     X = df.drop(target_column, axis=1)
     y = df[target_column]
-
+    logger.info(f'Calculando prediciones')
     y_pred = pipeline.predict(X)
-
+    logger.info(f'Métricas')
     acc = accuracy_score(y, y_pred)
     f1 = f1_score(y, y_pred)
-
-    print("\n=== Resultados del modelo ===")
-    print(f"Accuracy: {acc:.4f}")
-    print(f"F1-score: {f1:.4f}")
+    logger.info("\n=== Resultados del modelo ===")
+    logger.info(f"Accuracy: {acc:.4f}")
+    logger.info(f"Accuracy: {acc:.4f}")
+    logger.info(classification_report(y, y_pred))
     print(classification_report(y, y_pred))
 
 

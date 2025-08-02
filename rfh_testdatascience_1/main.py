@@ -18,6 +18,7 @@ def main(
         max_depth=5,
         n_estimators=200
 ):
+    logger.info('Carga de datos')
     reader_data = PreprocessingData(
         csv_path=train_path,
         column_names=column_names,
@@ -27,7 +28,7 @@ def main(
     )
 
     df = reader_data.execute()
-
+    logger.info('Entrenamiento del modelo')
     trainer = TrainerModel(
         df=df,
         target_column=target_column,
@@ -42,6 +43,7 @@ def main(
     X_train, X_test, y_train, y_test, pipeline = trainer.execute()
 
     if grid_search_ind_arg:
+        logger.info('Fin del proceso de Grid search')
         pass
 
     elif test_arg:
@@ -56,6 +58,7 @@ def main(
         print(f"Accuracy: {acc:.4f}")
         print(f"F1-score: {f1:.4f}")
         print(classification_report(y_test, y_pred))
+        logger.info('Fin del proceso de testing')
 
     else:
         joblib.dump(pipeline, f"../models/{model_name_arg}.pkl")

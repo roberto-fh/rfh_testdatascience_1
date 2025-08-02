@@ -40,6 +40,7 @@ class TrainerModel:
         X, y = self.split_target()
         categorical_features = self.categorical_columns()
 
+        logger.info('Aplicando transformaciones a los datos')
         transformer = PipelineModel(
             categorical_features,
             keep_columns=self.keep_column,
@@ -52,11 +53,13 @@ class TrainerModel:
 
         pipeline = transformer.execute()
 
+        logger.info('Separación test y train')
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=0.2, random_state=42, stratify=y
         )
 
         if self.grid_search_ind:
+            logger.info('Inicio grid search')
             grid_search = GridSearchCV(
                 estimator=pipeline,
                 param_grid=param_grid,
@@ -71,5 +74,6 @@ class TrainerModel:
             print("Best score:", grid_search.best_score_)
             return X_train, X_test, y_train, y_test, grid_search
         else:
+            logger.info('Ajustando pipeline')
             pipeline.fit(X_train, y_train)
             return X_train, X_test, y_train, y_test, pipeline
