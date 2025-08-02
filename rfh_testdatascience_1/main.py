@@ -45,10 +45,10 @@ def main(
         pass
 
     elif test_arg:
-        # 🔹 Predecir
+        # Predecir
         y_pred = pipeline.predict(X_test)
 
-        # 🔹 Evaluar
+        # Evaluar
         acc = accuracy_score(y_test, y_pred)
         f1 = f1_score(y_test, y_pred)
 

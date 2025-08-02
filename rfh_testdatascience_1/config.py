@@ -12,9 +12,7 @@ logger.info(f"PROJ_ROOT path is: {PROJ_ROOT}")
 
 DATA_DIR = PROJ_ROOT / "data"
 RAW_DATA_DIR = DATA_DIR / "raw"
-INTERIM_DATA_DIR = DATA_DIR / "interim"
-PROCESSED_DATA_DIR = DATA_DIR / "processed"
-EXTERNAL_DATA_DIR = DATA_DIR / "external"
+PROD_DATA_DIR = DATA_DIR / "prod"
 
 MODELS_DIR = PROJ_ROOT / "models"
 
@@ -24,6 +22,9 @@ FIGURES_DIR = REPORTS_DIR / "figures"
 # Paths a los archivos
 train_path = RAW_DATA_DIR / "adult.data"
 test_path = RAW_DATA_DIR / "adult.test"
+
+# Path prod
+prod_path = PROD_DATA_DIR / "adult.test"
 
 column_names = [
     "age", "workclass", "fnlwgt", "education", "education-num",
