@@ -127,7 +127,7 @@ class PipelineModel:
             logger.info('Selección de columnas importantes')
             self.categorical_features = ['workclass', 'education_group', 'marital-status', 'occupation', 'relationship', 'race', 'sex', 'continent', 'work_category']
         self.steps.append(self.one_hot_encoding())
-        logger.info('Aplicando OHE a las variables categoricas')
+        logger.info('Aplicando OHE a las variables categóricas')
         if self.over_sampling_ind:
             self.steps.append(self.over_sampling())
             logger.info('Aplicando oversampling')

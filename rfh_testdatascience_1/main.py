@@ -54,9 +54,9 @@ def main(
         acc = accuracy_score(y_test, y_pred)
         f1 = f1_score(y_test, y_pred)
 
-        print("\n=== Resultados del modelo ===")
-        print(f"Accuracy: {acc:.4f}")
-        print(f"F1-score: {f1:.4f}")
+        logger.info("\n=== Resultados del modelo ===")
+        logger.info(f"Accuracy: {acc:.4f}")
+        logger.info(f"Accuracy: {f1:.4f}")
         print(classification_report(y_test, y_pred))
         logger.info('Fin del proceso de testing')
 

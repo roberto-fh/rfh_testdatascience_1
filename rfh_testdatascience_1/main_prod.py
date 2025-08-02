@@ -35,8 +35,7 @@ def main(
     f1 = f1_score(y, y_pred)
     logger.info("\n=== Resultados del modelo ===")
     logger.info(f"Accuracy: {acc:.4f}")
-    logger.info(f"Accuracy: {acc:.4f}")
-    logger.info(classification_report(y, y_pred))
+    logger.info(f"Accuracy: {f1:.4f}")
     print(classification_report(y, y_pred))
 
 
